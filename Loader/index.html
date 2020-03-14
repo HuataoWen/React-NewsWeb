@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+        <style> 
+        #loader {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #loader p {
+            text-align: center;
+            margin-top: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .outerCircle {
+            position: relative;
+            background: #637eda;
+            border-radius: 50%;
+            height: 20px;
+            width: 20px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .innerCircle {
+            position: absolute;
+            background: #2d4eca;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation: loaderMove 1s infinite;
+        }
+        @keyframes loaderMove {
+            from {width: 1px; height: 1px;}
+            to {width: 20px; height: 20px;}
+        }
+
+        .worldTag, .politicsTag, .businessTag, .technologyTag, .sportsTag, .healthTag, .guardianTag, .nytimesTag {
+            text-align: center;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: small;
+            font-weight: bold;
+        }
+        .worldTag {color: white; background-color: #7c4eff;}
+        .politicsTag {color: white; background-color: #419488;}
+        .businessTag {color: white; background-color: #4696ec;}
+        .technologyTag {color: black; background-color: #cedc39;}
+        .sportsTag {color: black; background-color: #f6c244;}
+        .healthTag {color: white; background-color: #6e757c;}
+        .guardianTag {color: white; background-color: #14284a;}
+        .nytimesTag {color: black; background-color: #dddddd;}
+
+        .toggleSwitch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            display: inline-block;
+        }
+        .toggleSwitch input {
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            cursor: pointer;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 2px;
+          bottom: 2px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        input:checked + .slider {
+          background-color: #038efc;
+        }
+        input:checked + .slider:before {
+          -webkit-transform: translateX(20px);
+          -ms-transform: translateX(20px);
+          transform: translateX(20px);
+        }
+        .slider.round {
+          border-radius: 24px;
+        }
+        .slider.round:before {
+          border-radius: 50%;
+        }
+
+
+        .image-upload {
+            background-color: blue;
+        }
+        </style>
+
+        <script>
+            function hideLoader() {document.getElementById("loader").style.display = "None";}
+            function showLoader() {document.getElementById("loader").style.display = "inline";}
+            function switchNewsSource() {
+                if (document.getElementById("newsSourceCheckBox").checked) {
+                    showLoader();
+                }
+                else {
+                    hideLoader();
+                }
+            }
+            function bookmarkPage() {
+                document.getElementById("bookmark").src = "bookmark_active.ico";
+            }
+            function booknews() {
+                document.getElementById("bookmark1").src = "bookmark_book.ico";
+            }
+        </script>
+    </head>
+
+    <body>
+        <!--
+        <div id="loader">
+            <div class="outerCircle">
+                <div class="innerCircle"></div>
+            </div>
+            <p>Loading</p>
+        </div>
+        
+        <button onclick="showLoader()">Show Loader</button>
+        <button onclick="hideLoader()">Hide Loader</button>
+        
+        <span class="worldTag">WORLD</span>
+        <span class="politicsTag">POLITICS</span>
+        <span class="businessTag">BUSINESS</span>
+        <span class="technologyTag">TECHNOLOGY</span>
+        <span class="sportsTag">SPORTS</span>
+        <span class="healthTag">HEALTH</span>
+        <span class="guardianTag">GUARDIAN</span>
+        <span class="nytimesTag">NYTIMES</span>
+        -->
+
+        
+        <P>NYTimes</P>
+        <label class="toggleSwitch">
+            <input type="checkbox" id="newsSourceCheckBox" onclick="switchNewsSource()">
+            <span class="slider round"></span>
+        </label>
+        <P>Guardian</P>
+
+        <div class="image-upload">
+            <br>
+            <img id="bookmark" src="bookmark_deactive.ico" onclick="bookmarkPage()">
+            <img id="bookmark1" src="bookmark_unbook.ico" onclick="booknews()">
+        </div>
+
+    </body>
+</html>
