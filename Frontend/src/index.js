@@ -118,7 +118,7 @@ class App extends React.Component {
                     
                     <div>{<this.state.bookmarkIcon size={20} className="bookmarkPos" color='#ffffff' onClick={this.goBookmarkPage}/>}</div>
 
-                    {this.state.bookmarkIcon === FaRegBookmark && <div><span className="switchTag">NYTimes&nbsp;&nbsp;</span></div>}
+                    {this.state.bookmarkIcon === FaRegBookmark && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
                     {this.state.bookmarkIcon === FaRegBookmark &&
                     <label>
                         <Switch className="switchPos"
@@ -132,7 +132,7 @@ class App extends React.Component {
                         onColor="#0386ed"/>
                         &nbsp;&nbsp;
                     </label>}
-                    {this.state.bookmarkIcon === FaRegBookmark && <div><span className="switchTag">Guardian</span></div>}
+                    {this.state.bookmarkIcon === FaRegBookmark && <div><h3 className="switchTag">Guardian</h3></div>}
                 </Navbar.Collapse>
             </Navbar>
         </div>

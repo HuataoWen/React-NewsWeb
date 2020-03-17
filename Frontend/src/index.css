@@ -10,12 +10,18 @@
 
 .bookmarkPos {
     margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .switchTag {
     color: white;
+    font-size: medium;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .switchPos {
-    margin-bottom: -10px;
+    margin-top: 5px;
+    margin-bottom: -5px;
 }
