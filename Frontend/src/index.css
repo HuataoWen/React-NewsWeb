@@ -25,3 +25,45 @@
     margin-top: 5px;
     margin-bottom: -5px;
 }
+
+.bigCard {
+    margin: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.bigCard img {
+    object-fit: cover;
+    position: relative;
+    width: 100%;
+    height: auto;
+    vertical-align: bottom;
+    border: 1px double #ddd;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.bigCardContent {
+    position: relative;
+}
+
+
+.worldTag, .politicsTag, .businessTag, .technologyTag, .sportsTag, .healthTag, .guardianTag, .nytimesTag {
+    text-align: center;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+    font-weight: bold;
+    float: right;
+    
+}
+.worldTag {color: white; background-color: #7c4eff;}
+.politicsTag {color: white; background-color: #419488;}
+.businessTag {color: white; background-color: #4696ec;}
+.technologyTag {color: black; background-color: #cedc39;}
+.sportsTag {color: black; background-color: #f6c244;}
+.healthTag {color: white; background-color: #6e757c;}
+.guardianTag {color: white; background-color: #14284a;}
+.nytimesTag {color: black; background-color: #dddddd;}
