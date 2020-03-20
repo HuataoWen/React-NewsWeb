@@ -1,57 +1,7 @@
-.navbar,
-.navbar-default {
-    background-image: linear-gradient(to right,#121e3c 0,#3a5cac 100%) !important; /* override background image gradient w/ flat color */
-}
-
-.navbar-collapse {
-    overflow: hidden;
-}
-
-
-.bookmarkPos {
-    margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.switchTag {
-    color: white;
-    font-size: medium;
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-
-.switchPos {
-    margin-top: 5px;
-    margin-bottom: -5px;
-}
-
-.bigCard {
-    margin: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    cursor: pointer;
-    padding: 5px;
-}
-
-.bigCard img {
-    object-fit: cover;
-    position: relative;
-    width: 100%;
-    height: auto;
-    vertical-align: bottom;
-    border: 1px double #ddd;
-    border-radius: 4px;
-    padding: 3px;
-}
-
-.bigCardContent {
-    position: relative;
-}
-
-
 .worldTag, .politicsTag, .businessTag, .technologyTag, .sportsTag, .healthTag, .guardianTag, .nytimesTag {
     text-align: center;
-    padding: 2px 4px;
+    padding: 1px 2px;
+    margin: 2px;
     border-radius: 2px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: small;

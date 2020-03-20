@@ -1,0 +1,26 @@
+.navbar,
+.navbar-default {
+    background-image: linear-gradient(to right,#121e3c 0,#3a5cac 100%) !important; /* override background image gradient w/ flat color */
+}
+
+.navbar-collapse {
+    overflow: hidden;
+}
+
+.bookmarkPos {
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.switchTag {
+    color: white;
+    font-size: medium;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.switchPos {
+    margin-top: 5px;
+    margin-bottom: -5px;
+}

@@ -1,0 +1,22 @@
+.medianCard {
+    margin: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer;
+    padding: 5px;
+    height: auto;
+}
+
+.medianCard img {
+    object-fit: cover;
+    position: relative;
+    width: 100%;
+    height: auto;
+    vertical-align: bottom;
+    border: 1px double #ddd;
+    border-radius: 4px;
+    padding: 3px;
+}
+
+.medianCardContent {
+    position: relative;
+}
