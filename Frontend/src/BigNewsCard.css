@@ -1,7 +1,7 @@
 .bigCard {
     margin: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding: 5px;
+    padding: 15px;
     height: auto;
 }
 
@@ -18,4 +18,19 @@
 
 .bigCardContent {
     position: relative;
+}
+
+.bigCardDes {
+
+    display: block;/* or inline-block */
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow: hidden;
+  line-height: 1.5em;
+}
+
+.expandPos {
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

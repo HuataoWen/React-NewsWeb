@@ -1,7 +1,8 @@
 .smallCard {
     cursor: pointer;
-    padding: 8px;
+    padding: 10px;
     margin: 15px;
+    height: auto;
 }
 
 .smallCard img {
@@ -13,8 +14,10 @@
     border: 1px double #ddd;
     border-radius: 4px;
     padding: 3px;
+    margin: 15px 0;
 }
 
 .smallCardContent {
     position: relative;
+
 }

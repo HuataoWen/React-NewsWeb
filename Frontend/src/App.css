@@ -24,3 +24,8 @@
     margin-top: 5px;
     margin-bottom: -5px;
 }
+
+.shareModal {
+    justify-content: center;
+    padding: 0;
+}

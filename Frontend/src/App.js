@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardColumns, CardDeck} from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardColumns} from 'react-bootstrap';
 import Select from 'react-select';
 import Switch from "react-switch";
-import { FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
-import { FaBookmark, FaRegBookmark, IoMdShare, IoMdTrash } from 'react-icons/fa';
-import { SocialIcon } from 'react-social-icons';
-import Modal from "react-responsive-modal";
+import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
+import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
+import ReactTooltip from 'react-tooltip'
 
+import Modal from "react-responsive-modal";
 
 import MedianNewsCard from './MedianNewsCard';
 import SmallNewsCard from './SmallNewsCard';
@@ -23,10 +23,12 @@ class App extends React.Component {
         this.state = { searchWord: 'lll',
         options: [],
         activePage: 'Home',
-        bookmarkIcon: FaRegBookmark,
+        bookmarkIcon: MdBookmarkBorder,
         newsSource: NYT_SRC,
         newsCard: [],
         open: false,
+        modalTitle: '',
+        modalURL: '',
         news: [
             {
               id: 1,
@@ -78,6 +80,9 @@ class App extends React.Component {
         this.switchPage = this.switchPage.bind(this);
         this.goBookmarkPage = this.goBookmarkPage.bind(this);
         this.switchNewsSource = this.switchNewsSource.bind(this);
+        this.onOpenModal = this.onOpenModal.bind(this);
+        this.onCloseModal = this.onCloseModal.bind(this);
+        
     }
 
     getSearchSuggestion(data) {
@@ -122,7 +127,7 @@ class App extends React.Component {
                 </Row>    
             </div>
         });
-        //this.setState({bookmarkIcon: FaRegBookmark});
+        //this.setState({bookmarkIcon: MdBookmarkBorder});
         // TODO
     }
 
@@ -134,7 +139,10 @@ class App extends React.Component {
         this.setState({newsCard : this.state.news.map(news => {
             return (
                 <div style={{margin: "0 0 20px 0"}} key={news.id}>
-                    <MedianNewsCard openCard={this.openCard.bind(this)} news={news} />
+                    <MedianNewsCard
+                    openCard={this.openCard.bind(this)}
+                    onOpenModal={this.onOpenModal.bind(this)}
+                    news={news} />
                 </div>)
             })});
 
@@ -142,19 +150,23 @@ class App extends React.Component {
         // 2. Update news cards
         this.setState({searchWord: null});
         this.setState({activePage: page});
-        this.setState({bookmarkIcon: FaRegBookmark});
+        this.setState({bookmarkIcon: MdBookmarkBorder});
         // TODO
     }
 
     goBookmarkPage() {
-        this.setState({bookmarkIcon: FaBookmark});
+        this.setState({bookmarkIcon: MdBookmark});
         this.setState({newsCard: <p>Bookmark Page</p>});
 
         this.setState({newsCard:
             <div><h2 style={{margin: '0 15px'}}>Favorites</h2>
                 <Row>
                     {this.state.news.map(news => {
-                        return ( <SmallNewsCard key={news.id} openCard={this.openCard.bind(this)} news={news} /> )
+                        return ( <SmallNewsCard
+                            key={news.id}
+                            openCard={this.openCard.bind(this)}
+                            onOpenModal={this.onOpenModal.bind(this)}
+                            news={news} /> )
                     })}
                 </Row>    
             </div>
@@ -174,19 +186,21 @@ class App extends React.Component {
     openCard(id) {
         console.log("id:" + id);
         this.setState({newsCard:
-            <BigNewsCard key={1} saveToBookmark={this.saveToBookmark.bind(this)} news={this.state.news[id]} />
+            <BigNewsCard key={1}
+            saveToBookmark={this.saveToBookmark.bind(this)}
+            news={this.state.news[id]} />
         });
     }
-
-
-    onOpenModal = () => {
-        this.setState({ open: true });
-      };
     
-      onCloseModal = () => {
+    onOpenModal(title, url) {
+        this.setState({ open: true });
+        this.setState({ modalTitle: title });
+        this.setState({ modalURL: url });
+    };
+    
+    onCloseModal() {
         this.setState({ open: false });
-      };
-
+    };
 
     render() {
         return (
@@ -207,21 +221,30 @@ class App extends React.Component {
                     </div>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto"
+                        <Nav
+                        className="mr-auto"
                         activeKey={this.state.activePage}
                         onSelect={this.switchPage}>
-                            <NavItem><NavLink eventKey="Home">Home</NavLink></NavItem>
-                            <NavItem><NavLink eventKey="World">World</NavLink></NavItem>
-                            <NavItem><NavLink eventKey="Politics">Politics</NavLink></NavItem>
-                            <NavItem><NavLink eventKey="Business">Business</NavLink></NavItem>
-                            <NavItem><NavLink eventKey="Technology">Technology</NavLink></NavItem>
-                            <NavItem><NavLink eventKey="Sports">Sports</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Home">Home</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="World">World</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Politics">Politics</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Business">Business</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Technology">Technology</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Sports">Sports</NavLink></NavItem>
                         </Nav>
 
-                        <div>{<this.state.bookmarkIcon size={20} className="bookmarkPos" color='#ffffff' onClick={this.goBookmarkPage}/>}</div>
+                        <div>
+                            <a data-tip data-for='bookmarkTooltip'>
+                                {<this.state.bookmarkIcon size={25} className="bookmarkPos" color='#ffffff' onClick={this.goBookmarkPage}/>}
+                            </a>
+                            <ReactTooltip id='bookmarkTooltip' type='dark' place="bottom" effect="solid">
+                                <span>Bookmark</span>
+                            </ReactTooltip>
+                        </div>
 
-                        {this.state.bookmarkIcon === FaRegBookmark && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
-                        {this.state.bookmarkIcon === FaRegBookmark &&
+
+                        {this.state.bookmarkIcon === MdBookmarkBorder && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
+                        {this.state.bookmarkIcon === MdBookmarkBorder &&
                         <label>
                             <Switch className="switchPos"
                             onChange={this.switchNewsSource}
@@ -234,39 +257,45 @@ class App extends React.Component {
                             onColor="#0386ed"/>
                             &nbsp;&nbsp;
                         </label>}
-                        {this.state.bookmarkIcon === FaRegBookmark && <div><h3 className="switchTag">Guardian</h3></div>}
+                        {this.state.bookmarkIcon === MdBookmarkBorder && <div><h3 className="switchTag">Guardian</h3></div>}
                     </Navbar.Collapse>
                 </Navbar>
             </div>
             
             <div>{this.state.newsCard}</div>
+            
+            <div>
+            <Modal open={this.state.open} onClose={this.onCloseModal}>
+                <h4>{this.state.modalTitle} | {this.state.modalTitle}&nbsp;&nbsp;&nbsp;</h4>
+                <hr/>
+                <h4 className="d-flex justify-content-center">Share via</h4>
+                <div className="d-flex justify-content-around">
+                    <FacebookShareButton style={{ outline: 'none'}}
+                    url={this.state.modalURL}
+                    quote={this.state.modalTitle}
+                    className="button" 
+                    >
+                        <FacebookIcon size={50} round={true} />
+                    </FacebookShareButton>
 
-            <button onClick={this.onOpenModal}>Open modal</button>
-        <Modal open={this.state.open} onClose={this.onCloseModal}>
-          <h2>Simple centered modal</h2>
-          <FacebookShareButton
-                url={'www.baidu.com'}
-                quote={'title'}
-                className="button" 
-                >
-                <SocialIcon url="http://jaketrent.com" network="facebook" />
-              </FacebookShareButton>
-              <TwitterShareButton
-                url={'www.baidu.com'}
-                quote={'title'}
-                className="button" 
-                >
-                <SocialIcon url="http://jaketrent.com" network="twitter" />
-              </TwitterShareButton>
-              <EmailShareButton
-                url={'www.baidu.com'}
-                quote={'title'}
-                className="button" 
-                >
-                <SocialIcon url="http://jaketrent.com" network="email" />
-              </EmailShareButton>
-        </Modal>
-
+                    <TwitterShareButton style={{ outline: 'none'}}
+                    url={this.state.modalURL}
+                    quote={this.state.modalTitle}
+                    className="button" 
+                    >
+                        <TwitterIcon size={50} round={true} />
+                    </TwitterShareButton>
+                    
+                    <EmailShareButton style={{ outline: 'none'}}
+                    url={this.state.modalURL}
+                    quote={this.state.modalTitle}
+                    className="button" 
+                    >
+                        <EmailIcon size={50} round={true} />
+                    </EmailShareButton>
+                </div>
+            </Modal>
+            </div>
         </div>
         );
     }
