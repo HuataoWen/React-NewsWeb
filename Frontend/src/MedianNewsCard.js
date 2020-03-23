@@ -8,25 +8,25 @@ class NewsCard extends Component {
   }
 
   render () {
-    let { id, title, date, description } = this.props.news;
-    let url = 'www.google.com';
+    let { id, title, date, urlToImg, url, tags, description } = this.props.news;
 
     return (
     <Card className="medianCard">
       <Row>
         <Col md="2" onClick={() => this.props.openCard(id)}>
           <Card.Img top='true'
-          src="https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png"
+          src={urlToImg}
           alt="Card image cap"
           />
         </Col>
         <Col>
           <strong><i>{title}</i><MdShare onClick={() => this.props.onOpenModal(title, url)}/></strong>
           <div onClick={() => this.props.openCard(id)}>
-            <Card.Text>{description}</Card.Text>
+            <Card.Text className="medianCardDes">{description}</Card.Text>
             <span><i>{date}</i></span>
-            <span className="worldTag">WORLD</span>
-            <span className="businessTag">BUSINESS</span>
+            {tags.map((value, index) => {
+              return <span key={index} className={value+"Tag"}>{value.toUpperCase()}</span>
+            })}
           </div>
         </Col>
       </Row>

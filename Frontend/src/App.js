@@ -1,12 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import { Navbar, Nav, NavItem, NavLink, Container, Row, Col, Card, CardColumns} from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavLink, Row, Container} from 'react-bootstrap';
 import Select from 'react-select';
 import Switch from "react-switch";
 import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
 import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
 import ReactTooltip from 'react-tooltip'
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from "react-responsive-modal";
 
@@ -14,7 +15,7 @@ import MedianNewsCard from './MedianNewsCard';
 import SmallNewsCard from './SmallNewsCard';
 import BigNewsCard from './BigNewsCard';
 
-
+const override = 'display: block;margin: 0 auto;border-color: red;';
 let NYT_SRC = false, GUARDIAN_SRC = true;
 
 class App extends React.Component {
@@ -22,57 +23,17 @@ class App extends React.Component {
         super(props);
         this.state = { searchWord: 'lll',
         options: [],
-        activePage: 'Home',
+        activePage: 'home',
         bookmarkIcon: MdBookmarkBorder,
         newsSource: NYT_SRC,
         newsCard: [],
-        open: false,
+        modalFlag: false,
         modalTitle: '',
         modalURL: '',
-        news: [
-            {
-              id: 1,
-              title: "David Davidson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 2,
-              title: "Mark Markson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 3,
-              title: "Judy Judyson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 4,
-              title: "James Jameson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 5,
-              title: "James Jameson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 6,
-              title: "James Jameson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            },
-            {
-              id: 7,
-              title: "James Jameson",
-              date: "2020-03-27",
-              description: "Met at a party. Will connect with later"
-            }
-          ]};
+        bookmarkNews: [],
+        loading: true,
+        news: []
+    };
         
         this.getSearchSuggestion = this.getSearchSuggestion.bind(this);
         this.getNews = this.getNews.bind(this);
@@ -82,7 +43,30 @@ class App extends React.Component {
         this.switchNewsSource = this.switchNewsSource.bind(this);
         this.onOpenModal = this.onOpenModal.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.showLoader = this.showLoader.bind(this);
         
+
+    }
+
+    componentDidMount() {
+        // 1. Load local storage
+        let tmp = localStorage.getItem("newsSource");
+        if (tmp != null) {
+            if (tmp === "true") { this.setState({newsSource: GUARDIAN_SRC}); }
+            else { this.setState({newsSource: NYT_SRC}); }
+        }
+        
+        tmp = JSON.parse(localStorage.getItem("bookmarkNews"));
+        if (tmp != null) { this.setState({bookmarkNews: tmp}); }
+
+        setTimeout(
+            function() {
+                this.switchPage(this.state.activePage);
+            }
+            .bind(this),
+            500
+        );
     }
 
     getSearchSuggestion(data) {
@@ -109,6 +93,7 @@ class App extends React.Component {
     }
     
     getNews(data) {
+        window.scrollTo(0, 0);
         // 1. Get keyword
         let keyWord = data.value;
         this.setState({searchWord: keyWord.value});
@@ -132,20 +117,54 @@ class App extends React.Component {
     }
 
     switchPage(data) {
+        this.setState({newsCard: ''});
+        this.showLoader();
+        window.scrollTo(0, 0);
         // 1. Get page
         let page = data;
+        let source = '';
+
+        if (this.state.newsSource == NYT_SRC) source = 'NYT_SRC';
+        else source = 'GUARDIAN_SRC';
+
+        let requestedUrl = 'http://127.0.0.1:4000/page/' + page + '-' + source;
         console.log("switchPage -> Page: " + page);
 
-        this.setState({newsCard : this.state.news.map(news => {
-            return (
-                <div style={{margin: "0 0 20px 0"}} key={news.id}>
-                    <MedianNewsCard
-                    openCard={this.openCard.bind(this)}
-                    onOpenModal={this.onOpenModal.bind(this)}
-                    news={news} />
-                </div>)
-            })});
+        fetch(requestedUrl)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result);
+                this.setState({news: result});
 
+                setTimeout(
+                    function() {
+                        this.hideLoader();
+                        this.setState({newsCard : this.state.news.map(news => {
+                            return (
+                                <div style={{margin: "0 0 20px 0"}} key={news.id}>
+                                    <MedianNewsCard
+                                    openCard={this.openCard.bind(this)}
+                                    onOpenModal={this.onOpenModal.bind(this)}
+                                    news={news} />
+                                </div>
+                            )
+                        })});
+                    }
+                    .bind(this),
+                    500
+                );
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                this.setState({
+                isLoaded: true,
+                error
+                });
+            }
+        )
 
         // 2. Update news cards
         this.setState({searchWord: null});
@@ -155,52 +174,107 @@ class App extends React.Component {
     }
 
     goBookmarkPage() {
+        window.scrollTo(0, 0);
         this.setState({bookmarkIcon: MdBookmark});
-        this.setState({newsCard: <p>Bookmark Page</p>});
+        ReactTooltip.hide();
 
         this.setState({newsCard:
             <div><h2 style={{margin: '0 15px'}}>Favorites</h2>
                 <Row>
-                    {this.state.news.map(news => {
-                        return ( <SmallNewsCard
-                            key={news.id}
-                            openCard={this.openCard.bind(this)}
-                            onOpenModal={this.onOpenModal.bind(this)}
-                            news={news} /> )
+                    {this.state.bookmarkNews.map(news => {
+                        return (
+                        <SmallNewsCard
+                        key={news.id}
+                        openCard={this.openCard.bind(this)}
+                        onOpenModal={this.onOpenModal.bind(this)}
+                        removeFromBookmark={this.removeFromBookmark.bind(this)}
+                        page='bookmark'
+                        news={news} /> )
                     })}
                 </Row>    
             </div>
         });
+        console.log(this.state.newsCard)
         console.log("Enter bookmark age");
     }
     
     switchNewsSource(newsSource) {
         this.setState({ newsSource: newsSource });
         console.log("switchNewsSource -> News Source:" + newsSource);
+        localStorage.setItem("newsSource", newsSource);
+
+        // Update newsCard
     }
 
     saveToBookmark(id) {
-        alert(id);
+        this.setState({bookmarkNews: [...this.state.bookmarkNews, this.state.news[id]]});
+        toast('Saving ' + this.state.news[id].title, {containerId: 'A'});
+        setTimeout(
+            function() {
+                localStorage.setItem("bookmarkNews", JSON.stringify(this.state.bookmarkNews));
+            }
+            .bind(this),
+            500
+        );
+        localStorage.setItem("bookmarkNews", this.state.bookmarkNews);
+    }
+
+    removeFromBookmark(id, url, fromPage) {
+        this.setState({bookmarkNews: this.state.bookmarkNews.filter(function(item) { 
+            return item.url !== url;
+        })});
+        
+        if (fromPage === 'bookmarkPage') {
+            setTimeout(
+                function() {
+                    localStorage.setItem("bookmarkNews", JSON.stringify(this.state.bookmarkNews));
+                    this.setState({newsCard:
+                        <div><h2 style={{margin: '0 15px'}}>Favorites</h2>
+                            <Row>
+                                {this.state.bookmarkNews.map(news => {
+                                    return (
+                                    <SmallNewsCard
+                                    key={news.id}
+                                    openCard={this.openCard.bind(this)}
+                                    onOpenModal={this.onOpenModal.bind(this)}
+                                    removeFromBookmark={this.removeFromBookmark.bind(this)}
+                                    page='bookmark'
+                                    news={news} /> )
+                                })}
+                            </Row>
+                        </div>
+                    });
+                }
+                .bind(this),
+                500
+            );
+        }
+        toast('Removing ' + this.state.news[id].title, {containerId: 'A'});
     }
 
     openCard(id) {
-        console.log("id:" + id);
+        window.scrollTo(0, 0);
         this.setState({newsCard:
             <BigNewsCard key={1}
             saveToBookmark={this.saveToBookmark.bind(this)}
+            removeFromBookmark={this.removeFromBookmark.bind(this)}
+            inBookmark={this.state.bookmarkNews.some(item => id === item.id)}
             news={this.state.news[id]} />
         });
     }
     
     onOpenModal(title, url) {
-        this.setState({ open: true });
+        this.setState({ modalFlag: true });
         this.setState({ modalTitle: title });
         this.setState({ modalURL: url });
     };
     
     onCloseModal() {
-        this.setState({ open: false });
+        this.setState({ modalFlag: false });
     };
+
+    hideLoader() {document.getElementById("loader").style.display = "None";}
+    showLoader() {document.getElementById("loader").style.display = "inline";}
 
     render() {
         return (
@@ -225,12 +299,12 @@ class App extends React.Component {
                         className="mr-auto"
                         activeKey={this.state.activePage}
                         onSelect={this.switchPage}>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Home">Home</NavLink></NavItem>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="World">World</NavLink></NavItem>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Politics">Politics</NavLink></NavItem>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Business">Business</NavLink></NavItem>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Technology">Technology</NavLink></NavItem>
-                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="Sports">Sports</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="home">Home</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="world">World</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="politics">Politics</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="business">Business</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="technology">Technology</NavLink></NavItem>
+                            <NavItem><NavLink style={{ outline: 'none'}} eventKey="sports">Sports</NavLink></NavItem>
                         </Nav>
 
                         <div>
@@ -241,7 +315,6 @@ class App extends React.Component {
                                 <span>Bookmark</span>
                             </ReactTooltip>
                         </div>
-
 
                         {this.state.bookmarkIcon === MdBookmarkBorder && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
                         {this.state.bookmarkIcon === MdBookmarkBorder &&
@@ -265,7 +338,7 @@ class App extends React.Component {
             <div>{this.state.newsCard}</div>
             
             <div>
-            <Modal open={this.state.open} onClose={this.onCloseModal}>
+            <Modal open={this.state.modalFlag} onClose={this.onCloseModal}>
                 <h4>{this.state.modalTitle} | {this.state.modalTitle}&nbsp;&nbsp;&nbsp;</h4>
                 <hr/>
                 <h4 className="d-flex justify-content-center">Share via</h4>
@@ -295,6 +368,28 @@ class App extends React.Component {
                     </EmailShareButton>
                 </div>
             </Modal>
+
+            <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            transition={Zoom}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnVisibilityChange
+            draggable
+            pauseOnHover
+            />
+            
+            <div id="loader">
+                <div class="outerCircle">
+                    <div class="innerCircle"></div>
+                </div>
+                <p>Loading</p>
+            </div>
+            
+
             </div>
         </div>
         );
