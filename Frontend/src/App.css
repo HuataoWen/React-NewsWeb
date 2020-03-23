@@ -31,39 +31,9 @@
 }
 
 
-#loader {
+.loaderPos {
     position: absolute;
-    width: 60px;
-    height: 60px;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-}
-#loader p {
-    text-align: center;
-    margin-top: 20px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-.outerCircle {
-    position: relative;
-    background: #637eda;
-    border-radius: 50%;
-    height: 20px;
-    width: 20px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-.innerCircle {
-    position: absolute;
-    background: #2d4eca;
-    border-radius: 50%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    animation: loaderMove 1s infinite;
-}
-@keyframes loaderMove {
-    from {width: 1px; height: 1px;}
-    to {width: 20px; height: 20px;}
 }

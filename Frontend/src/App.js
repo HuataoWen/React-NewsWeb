@@ -10,12 +10,13 @@ import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from "react-responsive-modal";
+import BounceLoader from "react-spinners/BounceLoader";
 
 import MedianNewsCard from './MedianNewsCard';
 import SmallNewsCard from './SmallNewsCard';
 import BigNewsCard from './BigNewsCard';
 
-const override = 'display: block;margin: 0 auto;border-color: red;';
+
 let NYT_SRC = false, GUARDIAN_SRC = true;
 
 class App extends React.Component {
@@ -43,8 +44,6 @@ class App extends React.Component {
         this.switchNewsSource = this.switchNewsSource.bind(this);
         this.onOpenModal = this.onOpenModal.bind(this);
         this.onCloseModal = this.onCloseModal.bind(this);
-        this.hideLoader = this.hideLoader.bind(this);
-        this.showLoader = this.showLoader.bind(this);
         
 
     }
@@ -118,7 +117,7 @@ class App extends React.Component {
 
     switchPage(data) {
         this.setState({newsCard: ''});
-        this.showLoader();
+        this.setState({loading: true});
         window.scrollTo(0, 0);
         // 1. Get page
         let page = data;
@@ -139,7 +138,7 @@ class App extends React.Component {
 
                 setTimeout(
                     function() {
-                        this.hideLoader();
+                        this.setState({loading: false});
                         this.setState({newsCard : this.state.news.map(news => {
                             return (
                                 <div style={{margin: "0 0 20px 0"}} key={news.id}>
@@ -273,9 +272,6 @@ class App extends React.Component {
         this.setState({ modalFlag: false });
     };
 
-    hideLoader() {document.getElementById("loader").style.display = "None";}
-    showLoader() {document.getElementById("loader").style.display = "inline";}
-
     render() {
         return (
         <div>
@@ -381,13 +377,16 @@ class App extends React.Component {
             draggable
             pauseOnHover
             />
-            
-            <div id="loader">
-                <div class="outerCircle">
-                    <div class="innerCircle"></div>
-                </div>
-                <p>Loading</p>
+            <div style={{textAlign: 'center'}}>
+                <BounceLoader
+                css={'margin: 200px auto 0 auto'}
+                size={25}
+                color={"#123abc"}
+                loading={this.state.loading}
+                />
+                {this.state.loading === true && <span >Loading</span>}
             </div>
+            
             
 
             </div>
