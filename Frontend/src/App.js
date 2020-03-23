@@ -92,6 +92,8 @@ class App extends React.Component {
     }
     
     getNews(data) {
+        this.setState({newsCard: ''});
+        this.setState({loading: true});
         window.scrollTo(0, 0);
         // 1. Get keyword
         let keyWord = data.value;
@@ -99,18 +101,42 @@ class App extends React.Component {
         console.log("getNews -> Search word:" + keyWord);
 
         // 2. Fetch news
-        // TODO
+        let requestedUrl = 'http://127.0.0.1:4000/search/' + keyWord + '-' + this.state.newsSource;
+        fetch(requestedUrl)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result);
+                this.setState({news: result});
 
-        // 3. Update news cards
-        this.setState({newsCard:
-            <div><h2 style={{margin: '0 15px'}}>Results</h2>
-                <Row>
-                    {this.state.news.map(news => {
-                        return ( <SmallNewsCard key={news.id} openCard={this.openCard.bind(this)} news={news} /> )
-                    })}
-                </Row>    
-            </div>
-        });
+                setTimeout(
+                    function() {
+                        this.setState({loading: false});
+                        this.setState({newsCard:
+                            <div><h2 style={{margin: '0 15px'}}>Results</h2>
+                                <Row>
+                                    {this.state.news.map(news => {
+                                        return ( <SmallNewsCard key={news.id} openCard={this.openCard.bind(this)} news={news} /> )
+                                    })}
+                                </Row>
+                            </div>
+                        });
+                    }
+                    .bind(this),
+                    500
+                );
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                this.setState({
+                isLoaded: true,
+                error
+                });
+            }
+        )
+        
         //this.setState({bookmarkIcon: MdBookmarkBorder});
         // TODO
     }
@@ -121,12 +147,8 @@ class App extends React.Component {
         window.scrollTo(0, 0);
         // 1. Get page
         let page = data;
-        let source = '';
 
-        if (this.state.newsSource == NYT_SRC) source = 'NYT_SRC';
-        else source = 'GUARDIAN_SRC';
-
-        let requestedUrl = 'http://127.0.0.1:4000/page/' + page + '-' + source;
+        let requestedUrl = 'http://127.0.0.1:4000/page/' + page + '-' + this.state.newsSource;
         console.log("switchPage -> Page: " + page);
 
         fetch(requestedUrl)
