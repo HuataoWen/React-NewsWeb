@@ -8,12 +8,12 @@ class NewsCard extends Component {
   }
 
   render () {
-    let { id, title, date, urlToImg, url, tags, description } = this.props.news;
-
+    let { id, title, date, urlToImg, url, tags, description, source, article_id } = this.props.news;
+    
     return (
     <Card className="medianCard">
       <Row>
-        <Col md="2" onClick={() => this.props.openCard(id)}>
+        <Col md="2" onClick={() => this.props.openCard(id, article_id)}>
           <Card.Img top='true'
           src={urlToImg}
           alt="Card image cap"
@@ -21,7 +21,7 @@ class NewsCard extends Component {
         </Col>
         <Col>
           <strong><i>{title}</i><MdShare onClick={() => this.props.onOpenModal(title, url)}/></strong>
-          <div onClick={() => this.props.openCard(id)}>
+          <div onClick={() => this.props.openCard(id, article_id)}>
             <Card.Text className="medianCardDes">{description}</Card.Text>
             <span><i>{date}</i></span>
             {tags.map((value, index) => {

@@ -6,52 +6,144 @@ var app = express();
 app.use(cors());
 
 var NY_API_KEY = 'LPqcV435gYSnG5AmlyU9DdHHC34tozKE';
+//https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=web_url:(%22https://www.nytimes.com/2020/01/24/realestate/dealing-with-clutter-hangover.html%22)&api-key=LPqcV435gYSnG5AmlyU9DdHHC34tozKE
 var GUAD_API_KEY = '50290f90-1c40-44ff-a2c7-8a04aa499afa';
+//https://content.guardianapis.com/world/2020/mar/18/wednesday-briefing-coronavirus-the-race-home?api-key=50290f90-1c40-44ff-a2c7-8a04aa499afa&show-blocks=all
 var pageGroup = {'home': 1, 'world': 1, 'politics': 1, 'business': 1, 'technology': 1, 'sports': 1};
 let NYT_SRC = 'false', GUARDIAN_SRC = 'true';
 
-// http://127.0.0.1:4000/search/tesla-ss
-app.get('/search/:keyword-:source', function (req, res) {
-   let result = [];
-   let requestedUrl, requestPage;
-   let section, url_img;
 
-   if (req.params.source == NYT_SRC) {
-      requestedUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + req.params.keyword + '&api-key=' + NY_API_KEY;
+app.get('/getArticle', function (req, res) {
+   let requestedUrl, result =[];
+   let section, url_img;
+   console.log(req.query.source);
+   console.log(req.query.article_id);
+
+   if (req.query.source == NYT_SRC) {
+      requestedUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=web_url:("'+req.query.article_id+'")&api-key='+NY_API_KEY;
       request(requestedUrl, function (error, response, body) {
          if (!error && response.statusCode == 200) {
             body = JSON.parse(body);
-            var i = 0;
-            while (i < body.response.docs.length) {
-               if (pageGroup[body.response.docs[i].news_desk.toLowerCase()] == 1) section = [body.response.docs[i].news_desk.toLowerCase()];
-                  else section = ['health'];
-               
-               if (body.response.docs[i].multimedia.length == 0) {
-                  url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
-               }
-               else {
-                  url_img = 'https://www.nytimes.com/' + body.response.docs[i].multimedia[0].url;
-               }
-
-               result.push(
-                  {
-                     id: i,
-                     title: body.response.docs[i].headline.main,
-                     date: body.response.docs[i].pub_date.substring(0, 10),
-                     urlToImg: url_img,
-                     url: body.response.docs[i].web_url,
-                     tags: section
-                  }
-               )
-               i++;
-               if (result.length == 10) break;
+            console.log(body);
+   
+            if (pageGroup[body.response.docs[0].news_desk.toLowerCase()] == 1) section = [body.response.docs[0].news_desk.toLowerCase()];
+               else section = ['health'];
+            
+            if (body.response.docs[0].multimedia == null || body.response.docs[0].multimedia.length == 0) {
+               url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
             }
-            res.send(result);
+            else {
+               url_img = 'https://www.nytimes.com/' + body.response.docs[0].multimedia[0].url;
+            }
+
+            result.push(
+               {
+                  id: 0,
+                  title: body.response.docs[0].headline.main,
+                  date: body.response.docs[0].pub_date.substring(0, 10),
+                  urlToImg: url_img,
+                  url: body.response.docs[0].web_url,
+                  tags: section,
+                  description: body.response.docs[0].abstract,
+                  source: req.query.source,
+                  article_id: body.response.docs[0].web_url
+               }
+            )
+   
+            res.send(body);
          }
       });
    }
    else {
-      result = [];
+      requestedUrl = 'https://content.guardianapis.com/'+req.query.article_id+'?api-key='+GUAD_API_KEY+'&show-blocks=all';
+      request(requestedUrl, function (error, response, body) {
+         if (!error && response.statusCode == 200) {
+            body = JSON.parse(body);
+   
+            section = body.response.content.sectionId.toLowerCase();
+            if (section == 'sport') section = 'sports';
+            if (pageGroup[section] == 1) section = [section];
+            else section = ['health'];
+   
+            if (body.response.content.blocks.main == undefined || 
+               body.response.content.blocks.main.elements[0].assets.length == 0) {
+               url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
+            }
+            else {
+               url_img = body.response.content.blocks.main.elements[0].assets[0].file;
+            }
+   
+            result.push(
+               {
+                  id: 0,
+                  title: body.response.content.webTitle,
+                  date: body.response.content.webPublicationDate.substring(0, 10),
+                  urlToImg: url_img,
+                  url: body.response.content.webUrl,
+                  tags: section,
+                  description: body.response.content.blocks.body[0].bodyTextSummary,
+                  source: req.query.source,
+                  article_id: body.response.content.id
+               }
+            )
+   
+            res.send(result);
+         }
+      });
+   }
+})
+
+var getAPIresponse = function(requestedUrl, cb) {
+   let result = [];
+   request(requestedUrl, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+         body = JSON.parse(body);
+         var i = 0;
+         while (i < body.response.docs.length) {
+            if (pageGroup[body.response.docs[i].news_desk.toLowerCase()] == 1) section = [body.response.docs[i].news_desk.toLowerCase()];
+               else section = ['health'];
+            
+            if (body.response.docs[i].multimedia == null || body.response.docs[i].multimedia.length == 0) {
+               url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
+            }
+            else {
+               url_img = 'https://www.nytimes.com/' + body.response.docs[i].multimedia[0].url;
+            }
+
+            result.push(
+               {
+                  id: i,
+                  title: body.response.docs[i].headline.main,
+                  date: body.response.docs[i].pub_date.substring(0, 10),
+                  urlToImg: url_img,
+                  url: body.response.docs[i].web_url,
+                  tags: section,
+                  source: NYT_SRC,
+                  article_id: body.response.docs[i].web_url
+               }
+            )
+            i++;
+            if (result.length == 5) break;
+         }
+         cb(error, result);
+      }
+   });
+}
+
+
+// http://127.0.0.1:4000/search/tesla-ss
+app.get('/search/:keyword-:source', function (req, res) {
+   let requestedUrl, requestPage;
+   let section, url_img;
+
+   if (true) {
+      
+      requestedUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + req.params.keyword + '&api-key=' + NY_API_KEY;
+      poolList =  getAPIresponse(requestedUrl, function(err, poolList) {
+
+         // This is run in a callback once the request is done. 
+         result = poolList; 
+         
       requestedUrl = 'https://content.guardianapis.com/search?q=' + req.params.keyword + '&api-key=' + GUAD_API_KEY + '&show-blocks=all';;
       request(requestedUrl, function (error, response, body) {
          if (!error && response.statusCode == 200) {
@@ -66,13 +158,14 @@ app.get('/search/:keyword-:source', function (req, res) {
                if (pageGroup[section] == 1) section = [section];
                else section = ['health'];
 
-               if (body.response.results[i].blocks.main.elements[0].assets.length == 0) {
+               if (body.response.results[i].blocks.main == undefined || 
+                  body.response.results[i].blocks.main.elements[0].assets.length == 0) {
                   url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
                }
                else {
                   url_img = body.response.results[i].blocks.main.elements[0].assets[0].file;
                }
-               result.push(
+               poolList.push(
                   {
                      id: i,
                      title: body.response.results[i].webTitle,
@@ -80,15 +173,19 @@ app.get('/search/:keyword-:source', function (req, res) {
                      urlToImg: url_img,
                      url: body.response.results[i].webUrl,
                      tags: section,
+                     source: GUARDIAN_SRC,
+                     article_id: body.response.results[i].id
                   }
                )
 
                i++;
-               if (result.length == 10) break;
+               if (poolList.length == 10) break;
             }
-            res.send(result);
+            res.send(poolList);
          }
       });
+         //console.log(poolList);
+     });
    }
 })
 
@@ -127,11 +224,12 @@ app.get('/page/:page-:source', function (req, res) {
                   section = null;
                }
 
-               if (body.response.docs[i].multimedia.length == 0) {
+               if (body.results[i].multimedia == null || body.results[i].multimedia.length == 0) {
                   url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
                }
                else {
-                  url_img = 'https://www.nytimes.com/' + body.response.docs[i].multimedia[0].url;
+                  url_img = body.results[i].multimedia[0].url;
+                  //url_img = 'https://www.nytimes.com/' + body.results[i].multimedia[0].url;
                }
 
                if (section != null) {
@@ -144,6 +242,8 @@ app.get('/page/:page-:source', function (req, res) {
                         url: body.results[i].url,
                         tags: section,
                         description: body.results[i].abstract,
+                        source: NYT_SRC,
+                        article_id: body.results[i].url
                      }
                   )
                }
@@ -199,7 +299,9 @@ app.get('/page/:page-:source', function (req, res) {
                         urlToImg: url_img,
                         url: body.response.results[i].webUrl,
                         tags: section,
-                        description: body.response.results[i].blocks.body[0].bodyTextSummary
+                        description: body.response.results[i].blocks.body[0].bodyTextSummary,
+                        source: GUARDIAN_SRC,
+                        article_id: body.response.results[i].id
                      }
                   )
                }

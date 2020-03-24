@@ -27,6 +27,7 @@ class App extends React.Component {
         activePage: 'home',
         bookmarkIcon: MdBookmarkBorder,
         newsSource: NYT_SRC,
+        showSourceSwitch: true,
         newsCard: [],
         modalFlag: false,
         modalTitle: '',
@@ -94,6 +95,10 @@ class App extends React.Component {
     getNews(data) {
         this.setState({newsCard: ''});
         this.setState({loading: true});
+        this.setState({activePage: ''});
+        this.setState({showSourceSwitch: false});
+        this.setState({bookmarkIcon: MdBookmarkBorder});
+
         window.scrollTo(0, 0);
         // 1. Get keyword
         let keyWord = data.value;
@@ -106,7 +111,6 @@ class App extends React.Component {
         .then(res => res.json())
         .then(
             (result) => {
-                console.log(result);
                 this.setState({news: result});
 
                 setTimeout(
@@ -136,17 +140,18 @@ class App extends React.Component {
                 });
             }
         )
-        
-        //this.setState({bookmarkIcon: MdBookmarkBorder});
-        // TODO
     }
 
-    switchPage(data) {
+    switchPage(page) {
         this.setState({newsCard: ''});
+        this.setState({showSourceSwitch: true});
         this.setState({loading: true});
+        this.setState({searchWord: null});
+        this.setState({activePage: page});
+        this.setState({bookmarkIcon: MdBookmarkBorder});
+
         window.scrollTo(0, 0);
         // 1. Get page
-        let page = data;
 
         let requestedUrl = 'http://127.0.0.1:4000/page/' + page + '-' + this.state.newsSource;
         console.log("switchPage -> Page: " + page);
@@ -173,7 +178,7 @@ class App extends React.Component {
                         })});
                     }
                     .bind(this),
-                    500
+                    100
                 );
             },
             // Note: it's important to handle errors here
@@ -186,17 +191,14 @@ class App extends React.Component {
                 });
             }
         )
-
-        // 2. Update news cards
-        this.setState({searchWord: null});
-        this.setState({activePage: page});
-        this.setState({bookmarkIcon: MdBookmarkBorder});
-        // TODO
     }
 
     goBookmarkPage() {
         window.scrollTo(0, 0);
         this.setState({bookmarkIcon: MdBookmark});
+        this.setState({searchWord: null});
+        this.setState({activePage: ''});
+        this.setState({showSourceSwitch: false});
         ReactTooltip.hide();
 
         this.setState({newsCard:
@@ -223,6 +225,15 @@ class App extends React.Component {
         this.setState({ newsSource: newsSource });
         console.log("switchNewsSource -> News Source:" + newsSource);
         localStorage.setItem("newsSource", newsSource);
+        if (this.state.activePage != '') {
+            setTimeout(
+                function() {
+                    this.switchPage(this.state.activePage);
+                }
+                .bind(this),
+                100
+            );
+        }
 
         // Update newsCard
     }
@@ -273,15 +284,53 @@ class App extends React.Component {
         toast('Removing ' + this.state.news[id].title, {containerId: 'A'});
     }
 
-    openCard(id) {
+    openCard(id, article_id) {
+        this.setState({newsCard: ''});
+        this.setState({loading: true});
+        this.setState({showSourceSwitch: true});
+        this.setState({searchWord: null});
+        this.setState({activePage: ''});
+        this.setState({bookmarkIcon: MdBookmarkBorder});
+
+
+        
         window.scrollTo(0, 0);
-        this.setState({newsCard:
-            <BigNewsCard key={1}
-            saveToBookmark={this.saveToBookmark.bind(this)}
-            removeFromBookmark={this.removeFromBookmark.bind(this)}
-            inBookmark={this.state.bookmarkNews.some(item => id === item.id)}
-            news={this.state.news[id]} />
-        });
+        
+        let requestedUrl = 'http://127.0.0.1:4000/getArticle?article_id=' + article_id + '&source=' + this.state.newsSource;
+
+        fetch(requestedUrl)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                console.log(result);
+                this.setState({news: result});
+
+                setTimeout(
+                    function() {
+                        this.setState({loading: false});
+
+                        this.setState({newsCard:
+                            <BigNewsCard key={1}
+                            saveToBookmark={this.saveToBookmark.bind(this)}
+                            removeFromBookmark={this.removeFromBookmark.bind(this)}
+                            inBookmark={this.state.bookmarkNews.some(item => id === item.id)}
+                            news={this.state.news[0]} />
+                        });
+                    }
+                    .bind(this),
+                    1000
+                );
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                this.setState({
+                isLoaded: true,
+                error
+                });
+            }
+        )
     }
     
     onOpenModal(title, url) {
@@ -334,8 +383,8 @@ class App extends React.Component {
                             </ReactTooltip>
                         </div>
 
-                        {this.state.bookmarkIcon === MdBookmarkBorder && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
-                        {this.state.bookmarkIcon === MdBookmarkBorder &&
+                        {this.state.showSourceSwitch === true && <div><h3 className="switchTag">NYTimes&nbsp;&nbsp;</h3></div>}
+                        {this.state.showSourceSwitch === true &&
                         <label>
                             <Switch className="switchPos"
                             onChange={this.switchNewsSource}
@@ -348,7 +397,7 @@ class App extends React.Component {
                             onColor="#0386ed"/>
                             &nbsp;&nbsp;
                         </label>}
-                        {this.state.bookmarkIcon === MdBookmarkBorder && <div><h3 className="switchTag">Guardian</h3></div>}
+                        {this.state.showSourceSwitch === true && <div><h3 className="switchTag">Guardian</h3></div>}
                     </Navbar.Collapse>
                 </Navbar>
             </div>
