@@ -65,8 +65,7 @@ app.get('/getArticle', function (req, res) {
             if (pageGroup[section] == 1) section = [section];
             else section = ['health'];
    
-            if (body.response.content.blocks.main == undefined || 
-               body.response.content.blocks.main.elements[0].assets.length == 0) {
+            if (body.response.content.blocks.main == undefined || body.response.content.blocks.main.elements[0].assets.length == 0) {
                url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
             }
             else {
@@ -158,8 +157,7 @@ app.get('/search/:keyword-:source', function (req, res) {
                if (pageGroup[section] == 1) section = [section];
                else section = ['health'];
 
-               if (body.response.results[i].blocks.main == undefined || 
-                  body.response.results[i].blocks.main.elements[0].assets.length == 0) {
+               if (body.response.results[i].blocks.main == undefined || body.response.results[i].blocks.main.elements[0].assets.length == 0) {
                   url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
                }
                else {
@@ -282,7 +280,7 @@ app.get('/page/:page-:source', function (req, res) {
                   section = null;
                }
 
-               if (body.response.results[i].blocks.main.elements[0].assets.length == 0) {
+               if (body.response.results[i].blocks.main == undefined || body.response.results[i].blocks.main.elements[0].assets.length == 0) {
                   url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
                }
                else {
