@@ -108,7 +108,7 @@ class BigCard extends Component {
           <div className="d-flex">
             <div className="mr-auto p-2"><span><i>{date}</i></span></div>
             <div className="p-2">
-              <a data-tip data-for='facebookTooltip'>
+              <a href="/#" data-tip data-for='facebookTooltip'>
                 <FacebookShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
                   <FacebookIcon size={25} round={true} />
                 </FacebookShareButton>
@@ -117,7 +117,7 @@ class BigCard extends Component {
                 <span>Facebook</span>
               </ReactTooltip>
 
-              <a data-tip data-for='twitterTooltip'>
+              <a href="/#" data-tip data-for='twitterTooltip'>
                 <TwitterShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
                   <TwitterIcon size={25} round={true} />
                 </TwitterShareButton>
@@ -126,7 +126,7 @@ class BigCard extends Component {
                 <span>Twitter</span>
               </ReactTooltip>
 
-              <a data-tip data-for='emailTooltip'>
+              <a href="/#" data-tip data-for='emailTooltip'>
                 <EmailShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
                   <EmailIcon size={25} round={true} />
                 </EmailShareButton>
@@ -139,7 +139,7 @@ class BigCard extends Component {
             <div className="p-2"></div>
 
             <div className="p-2">
-              <a data-tip data-for='bookmarkTooltip2'>
+              <a href="/#" data-tip data-for='bookmarkTooltip2'>
                 {this.state.inBookmark === true && <MdBookmark size={25} color='#ff0000' onClick={() => this.removeFromBookmark(bookmarkInfo)} />}
                 {this.state.inBookmark === false && <MdBookmarkBorder size={25} color='#ff0000' onClick={() => this.saveToBookmark(bookmarkInfo)} />}
               </a>
