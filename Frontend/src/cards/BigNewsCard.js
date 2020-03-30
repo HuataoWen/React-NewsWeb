@@ -139,7 +139,7 @@ class BigCard extends Component {
             <div className="p-2"></div>
 
             <div className="p-2">
-              <a href="/#" data-tip data-for='bookmarkTooltip2'>
+              <a data-tip data-for='bookmarkTooltip2'>
                 {this.state.inBookmark === true && <MdBookmark size={25} color='#ff0000' onClick={() => this.removeFromBookmark(bookmarkInfo)} />}
                 {this.state.inBookmark === false && <MdBookmarkBorder size={25} color='#ff0000' onClick={() => this.saveToBookmark(bookmarkInfo)} />}
               </a>
