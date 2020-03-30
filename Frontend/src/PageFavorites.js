@@ -48,7 +48,7 @@ class PageFavorites extends Component {
 
     let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
 
-    if (bookmarkDB.length === 0) {
+    if (bookmarkDB === null || bookmarkDB.length === 0) {
       this.setState({ newsCard: <div style={{ textAlign: 'center' }}><br/><h4>You have no saved articles</h4></div> })
     }
     else {

@@ -29,7 +29,11 @@ class PageSearch extends Component {
     console.log("getNews -> Search word:" + keyWord);
 
     // 2. Fetch news
-    let requestedUrl = 'http://127.0.0.1:4000/search/' + keyWord + '-' + this.props.newsSource;
+    let AWSIP = false;
+    let requestedUrl;
+    if (AWSIP) requestedUrl = 'http://ec2-3-133-141-163.us-east-2.compute.amazonaws.com:4000/search/' + keyWord + '-' + this.props.newsSource;
+    else requestedUrl = 'http://127.0.0.1:4000/search/' + keyWord + '-' + this.props.newsSource;
+    
     fetch(requestedUrl)
       .then(res => res.json())
       .then(

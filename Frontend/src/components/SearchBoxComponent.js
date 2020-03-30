@@ -42,7 +42,7 @@ class SearchBoxComponent extends Component {
     this.setState({ loadingSuggestions: true });
     let localOptions = [];
 
-    let debug = false;
+    let debug = true;
 
     if (debug) {
       this.setState({ searchSuggestions: [{ value: keyword, label: keyword }] });

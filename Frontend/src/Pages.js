@@ -29,8 +29,11 @@ class Pages extends Component {
     this.setState({ loading: true });
     this.setState({ newsCard: '' });
 
-    
-    let requestedUrl = 'http://127.0.0.1:4000/page/' + this.props.match.params[0] + '-' + this.props.source;
+    let AWSIP = false;
+    let requestedUrl;
+    if (AWSIP) requestedUrl = 'http://ec2-3-133-141-163.us-east-2.compute.amazonaws.com:4000/page/' + this.props.match.params[0] + '-' + this.props.source;
+    else requestedUrl = 'http://127.0.0.1:4000/page/' + this.props.match.params[0] + '-' + this.props.source;
+
     console.log(requestedUrl);
     fetch(requestedUrl)
       .then(response => response.json())
