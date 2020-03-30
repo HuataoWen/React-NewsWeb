@@ -7,22 +7,32 @@
     overflow: hidden;
 }
 
+.pageInactive {
+    outline: none;
+    color: #929db8;
+    margin-right: 10px;
+}
+.pageInactive:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.pageActive {
+    color: white;
+}
+
 .bookmarkPos {
     margin-right: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 .switchTag {
     color: white;
     font-size: medium;
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .switchPos {
-    margin-top: 5px;
-    margin-bottom: -5px;
+    margin-bottom: -10px;
 }
 
 .shareModal {

@@ -367,7 +367,7 @@ class App extends React.Component {
                         onChange={this.getNews}
                         onInputChange={this.getSearchSuggestion}
                         placeholder={"Enter keyword .."}
-                        /> 
+                        />
                     </div>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
