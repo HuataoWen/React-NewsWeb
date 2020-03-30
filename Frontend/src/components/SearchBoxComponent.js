@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Select from 'react-select';
 
-class SearchBox extends Component {
+class SearchBoxComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -86,4 +86,4 @@ class SearchBox extends Component {
   }
 }
 
-export default SearchBox;
+export default SearchBoxComponent;

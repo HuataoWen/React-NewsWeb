@@ -7,20 +7,20 @@ import smoothscroll from 'smoothscroll-polyfill';
 import commentBox from 'commentbox.io';
 import { ToastContainer, toast, Zoom } from 'react-toastify';
 
+import './BigNewsCard.css';
+
 class BigCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       expandIcon: MdExpandMore,
-      expandPos: 0,
-      inBookmark: this.props.inBookmark,
+      inBookmark: false,
       ppos: 0,
       numLines: '9em'
     };
 
     this.myRef = React.createRef();
     this.expandCollapse = this.expandCollapse.bind(this);
-    this.processBookmark = this.processBookmark.bind(this);
     this.saveToBookmark = this.saveToBookmark.bind(this);
     this.removeFromBookmark = this.removeFromBookmark.bind(this);
 
@@ -49,32 +49,37 @@ class BigCard extends Component {
   }
 
   componentDidMount() {
-    this.removeCommentBox = commentBox('5708029035020288-proj', { defaultBoxId: this.props.news.id });
+    let id = this.props.news.id;
+    this.removeCommentBox = commentBox('5708029035020288-proj', { defaultBoxId: id });
+
+    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    if (bookmarkDB == null) {
+      this.setState({ inBookmark: false });
+    }
+    else {
+      let tmp = bookmarkDB.filter(function (item) { return item.id === id; });
+      if (tmp.length === 0) this.setState({ inBookmark: false });
+      else this.setState({ inBookmark: true });
+    }
   }
 
   componentWillUnmount() {
     this.removeCommentBox();
   }
 
-  processBookmark(bookmarkInfo) {
-    if (this.state.inBookmark === false) {
-      this.props.saveToBookmark(bookmarkInfo);
-      this.setState({ inBookmark: true });
-    }
-    else {
-      this.props.removeFromBookmark(bookmarkInfo);
-      this.setState({ inBookmark: false });
-    }
-  }
-
   saveToBookmark(bookmarkInfo) {
     console.log(bookmarkInfo);
 
     let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
-    if (bookmarkDB != null) bookmarkDB = [...bookmarkDB, { id: bookmarkInfo.id, content: bookmarkInfo.content }];
-    else bookmarkDB = [{ id: bookmarkInfo.id, content: bookmarkInfo.content }];
+
+    if (bookmarkDB != null) bookmarkDB = [...bookmarkDB, bookmarkInfo];
+    else bookmarkDB = [bookmarkInfo];
+    console.log('here:' + JSON.stringify(bookmarkDB));
     localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
+
     console.log("bookmarkDB:" + bookmarkDB);
+
+    this.setState({ inBookmark: true });
     toast('Saving ' + bookmarkInfo.title, { containerId: 'A' });
   }
 
@@ -84,18 +89,19 @@ class BigCard extends Component {
     let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
     bookmarkDB = bookmarkDB.filter(function (item) { return item.id !== bookmarkInfo.id; });
     localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
-    console.log("bookmarkDB:" + bookmarkDB);
-    toast('Removing ' + bookmarkInfo.title, { containerId: 'A' });
 
+    console.log("bookmarkDB:" + bookmarkDB);
+
+    this.setState({ inBookmark: false });
+    toast('Removing ' + bookmarkInfo.title, { containerId: 'A' });
   }
 
   render() {
     let { id, title, date, urlToImg, url, tags, description, source } = this.props.news;
     let bookmarkInfo = { id: id, title: title, urlToImg: urlToImg, url: url, date: date, tags: tags, source: source };
+
     return (
       <div>
-
-
         <Card className="bigCard">
           <strong><i>{title}</i></strong>
 
@@ -158,18 +164,7 @@ class BigCard extends Component {
 
           <div className="commentbox" id={this.props.news.id}></div>
         </Card>
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          transition={Zoom}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover
-        />
+        
       </div>
     )
   }

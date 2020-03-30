@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-
-import MedianNewsCard from './MedianNewsCard';
-import Loader from './Loader';
 import Modal from "react-responsive-modal";
 import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
+
+import MedianNewsCard from './cards/MedianNewsCard';
+import LoaderComponent from './components/LoaderComponent';
 
 
 class Pages extends Component {
@@ -29,11 +29,14 @@ class Pages extends Component {
     this.setState({ loading: true });
     this.setState({ newsCard: '' });
 
+    
     let requestedUrl = 'http://127.0.0.1:4000/page/' + this.props.match.params[0] + '-' + this.props.source;
+    console.log(requestedUrl);
     fetch(requestedUrl)
       .then(response => response.json())
       .then(result => {
         this.setState({ loading: false });
+        
         this.setState({
           newsCard: result.map(news => {
             return (
@@ -54,8 +57,6 @@ class Pages extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps);
-    console.log(this);
     if (prevProps.match.params[0] !== this.props.match.params[0] ||
       prevProps.source !== this.props.source) {
       this.updateContent();
@@ -76,7 +77,7 @@ class Pages extends Component {
     return (
       <div>
         {this.state.newsCard}
-        <Loader loading={this.state.loading} />
+        <LoaderComponent loading={this.state.loading} />
         <div>
           <Modal open={this.state.modalFlag} onClose={this.onCloseModal}>
             <h4>{this.state.modalTitle}&nbsp;&nbsp;&nbsp;&nbsp;</h4>

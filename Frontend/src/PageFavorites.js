@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { Row } from 'react-bootstrap';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
-import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
-import Modal from "react-responsive-modal";
 import { withRouter } from 'react-router-dom';
-import ReactTooltip from 'react-tooltip'
 
-import SmallNewsCard from './SmallNewsCard';
+import { Row } from 'react-bootstrap';
+
+import { ToastContainer, toast, Zoom } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Modal from "react-responsive-modal";
+import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
+
+import ReactTooltip from 'react-tooltip';
+
+import SmallNewsCard from './cards/SmallNewsCard';
 
 const SmallNewsCardRouter = withRouter(SmallNewsCard);
 
-class Favorites extends Component {
+class PageFavorites extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,18 +90,6 @@ class Favorites extends Component {
     return (
       <div>
         {this.state.newsCard}
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          transition={Zoom}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnVisibilityChange
-          draggable
-          pauseOnHover
-        />
         <div>
           <Modal open={this.state.modalFlag} onClose={this.onCloseModal}>
             <h4>{this.state.modalTitle}&nbsp;&nbsp;&nbsp;&nbsp;</h4>
@@ -134,4 +127,4 @@ class Favorites extends Component {
   }
 }
 
-export default Favorites;
+export default PageFavorites;

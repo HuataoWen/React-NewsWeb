@@ -3,6 +3,8 @@ import { Card, Col } from 'react-bootstrap';
 import { MdShare } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
 
+import './SmallNewsCard.css';
+
 class SmallCard extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +46,7 @@ class SmallCard extends Component {
             />
             <div>
               <span><i>{date}</i></span>
-              {this.props.page === 'bookmark' && <span key={source} className={sourceTag + 'Tag'}>{source.toUpperCase()}</span>}
+              {this.props.page === 'bookmark' && <span key={sourceTag} className={sourceTag + 'Tag'}>{sourceTag.toUpperCase()}</span>}
               {tags.map((value, index) => {
                 return (
                   <span key={value} className={value + "Tag"}>{value.toUpperCase()}</span>

@@ -3,7 +3,7 @@ import Switch from "react-switch";
 
 let NYT_SRC = false, GUARDIAN_SRC = true;
 
-class SourceSwitch extends React.Component {
+class SourceSwitchComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +14,7 @@ class SourceSwitch extends React.Component {
 
   componentDidMount() {
     let tmp = localStorage.getItem("newsSource");
+    
     if (tmp != null) {
       if (tmp === "true") tmp = GUARDIAN_SRC;
       else tmp = NYT_SRC;
@@ -21,6 +22,7 @@ class SourceSwitch extends React.Component {
     else {
       tmp = GUARDIAN_SRC;
     }
+    
     this.setState({ newsSource: tmp });
     this.props.setNewsSource(tmp);
   }
@@ -58,4 +60,4 @@ class SourceSwitch extends React.Component {
   }
 }
 
-export default SourceSwitch;
+export default SourceSwitchComponent;

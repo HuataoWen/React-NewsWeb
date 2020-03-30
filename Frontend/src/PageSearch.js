@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 
-import SmallNewsCard from './SmallNewsCard';
-import Loader from './Loader';
+import SmallNewsCard from './cards/SmallNewsCard';
+import LoaderComponent from './components/LoaderComponent';
 
 const SmallNewsCardRouter = withRouter(SmallNewsCard);
 var qs = require('qs');
 
-class SearchPage extends Component {
+class PageSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -75,10 +75,10 @@ class SearchPage extends Component {
     return (
       <div>
         {this.state.newsCard}
-        <Loader loading={this.state.loading} />
+        <LoaderComponent loading={this.state.loading} />
       </div>
     )
   }
 }
 
-export default SearchPage;
+export default PageSearch;

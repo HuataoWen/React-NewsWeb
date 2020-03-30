@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { MdShare } from 'react-icons/md';
 
+import './MedianNewsCard.css';
+
 class NewsCard extends Component {
 
   render() {

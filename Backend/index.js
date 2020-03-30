@@ -193,6 +193,8 @@ app.get('/page/:page-:source', function (req, res) {
   let requestedUrl, requestPage;
   let section, url_img;
 
+  console.log(req.params.source);
+
 
   if (req.params.source == NYT_SRC) {
     requestedUrl = 'https://api.nytimes.com/svc/topstories/v2/' + req.params.page + '.json?api-key=' + NY_API_KEY;

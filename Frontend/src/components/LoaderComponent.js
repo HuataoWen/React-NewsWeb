@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BounceLoader from "react-spinners/BounceLoader";
 
-class Loader extends Component {
+class LoaderComponent extends Component {
 
   render() {
     return (
@@ -20,4 +20,4 @@ class Loader extends Component {
   }
 }
 
-export default Loader;
+export default LoaderComponent;
