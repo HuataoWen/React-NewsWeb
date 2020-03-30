@@ -5,7 +5,7 @@ import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShare
 import ReactTooltip from 'react-tooltip'
 import smoothscroll from 'smoothscroll-polyfill';
 import commentBox from 'commentbox.io';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import './BigNewsCard.css';
 

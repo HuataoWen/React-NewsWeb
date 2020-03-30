@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch as RouterSwitch, NavLink, withRouter } from 'react-router-dom';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { ToastContainer, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Pages from "./Pages"
@@ -19,7 +19,7 @@ const SearchBoxComponentRouter = withRouter(SearchBoxComponent);
 const PageswithRouter = withRouter(Pages);
 const PageOpenArticleRouter = withRouter(PageOpenArticle);
 
-let NYT_SRC = false, GUARDIAN_SRC = true;
+let NYT_SRC = false;
 
 class App extends React.Component {
   constructor(props) {

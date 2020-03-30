@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import { Row } from 'react-bootstrap';
 
-import { ToastContainer, toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Modal from "react-responsive-modal";

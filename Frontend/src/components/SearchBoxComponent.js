@@ -13,35 +13,78 @@ class SearchBoxComponent extends Component {
 
     this.getSearchSuggestions = this.getSearchSuggestions.bind(this);
     this.getSearchNews = this.getSearchNews.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
+
+  handleSearchChange = async (event, { value }) => {
+    try {
+      const response = await fetch(
+        `https://xiaobudai.cognitiveservices.azure.com/bing/v7.0/suggestions?mkt=en-US&q=${value}`,
+        {
+          headers: {
+            "Ocp-Apim-Subscription-Key": "8cfdb72a5dfe44ba94f7d66f8a598f0a"
+          }
+        }
+      );
+      const data = await response.json();
+      const resultsRaw = data.suggestionGroups[0].searchSuggestions;
+      const results = resultsRaw.map(result => ({ title: result.displayText, url: result.url }));
+
+      //this.setState({ results });
+      console.log(results);
+    } catch (error) {
+      console.error(`Error fetching search ${value}`);
+    }
+  };
 
   getSearchSuggestions(keyword) {
     console.log('getSearchSuggestions() -> keyword:' + keyword);
     this.setState({ loadingSuggestions: true });
-
     let localOptions = [];
 
-    if (keyword !== '') {
-      // TODO:: suggestion api
-      let i;
-      for (i = 0; i < 40; i++) {
-        localOptions.push({ value: keyword, label: keyword });
-      }
+    let debug = false;
+
+    if (debug) {
+      this.setState({ searchSuggestions: [{ value: keyword, label: keyword }] });
+      this.setState({ loadingSuggestions: false });
     }
     else {
-      console.log('getSearchSuggestions -> keyword is empty');
+      if (keyword !== '') {
+        fetch('https://xiaobudai.cognitiveservices.azure.com/bing/v7.0/suggestions?mkt=en-US&q=' + keyword, {
+          headers: {
+            "Ocp-Apim-Subscription-Key": "8cfdb72a5dfe44ba94f7d66f8a598f0a"
+          }
+        })
+          .then(response => response.json())
+          .then(result => {
+            console.log(result);
+            if (result.error === undefined) {
+              let resultsRaw = result.suggestionGroups[0].searchSuggestions;
+              let results = resultsRaw.map(result => (result.displayText));
+              let i;
+              for (i = 0; i < results.length; i++) {
+                localOptions.push({ value: results[i], label: results[i] });
+              }
+              this.setState({ loadingSuggestions: false });
+              this.setState({ searchSuggestions: localOptions });
+            }
+          },
+            (error) => {
+              console.log(error);
+            });
+      }
+      else {
+        console.log('getSearchSuggestions -> keyword is empty');
+        this.setState({ loadingSuggestions: false });
+      }
     }
-
-    this.setState({ loadingSuggestions: false });
-    this.setState({ searchSuggestions: localOptions });
   }
 
   getSearchNews(keyword) {
+    this.setState({ loadingSuggestions: false });
     console.log('getSearchNews() -> keyword:' + keyword.value);
     this.setState({ searchKeyword: keyword });
     this.props.history.push('/search?q=' + keyword.value);
-    //this.setState({searchKeyword: this.props.state.searchValue});
-    //this.setState({searchKeyword: {label: keyword.label}});
   }
 
   render() {

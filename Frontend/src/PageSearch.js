@@ -34,21 +34,32 @@ class PageSearch extends Component {
       .then(res => res.json())
       .then(
         (result) => {
-          
-          console.log(result);
+          console.log('--------------');
+          console.log(result.length);
           this.setState({ loading: false });
-          this.setState({
-            newsCard:
-              <div><h2 style={{ margin: '0 15px' }}>Results</h2>
-                <Row>
-                  {result.map(news => {
-                    return (<SmallNewsCardRouter key={news.id}
-                      page='search'
-                      news={news} />)
-                  })}
-                </Row>
-              </div>
-          });
+          if (result.length === 0) {
+            this.setState({
+              newsCard:
+                <div>
+                  <h2 style={{ margin: '0 15px' }}>Results</h2>
+                  <h4 style={{ margin: '0 15px' }}>No related results!</h4>
+                </div>
+            });
+          }
+          else {
+            this.setState({
+              newsCard:
+                <div><h2 style={{ margin: '0 15px' }}>Results</h2>
+                  <Row>
+                    {result.map(news => {
+                      return (<SmallNewsCardRouter key={news.id}
+                        page='search'
+                        news={news} />)
+                    })}
+                  </Row>
+                </div>
+            });
+          }
         },
         (error) => {
           this.setState({

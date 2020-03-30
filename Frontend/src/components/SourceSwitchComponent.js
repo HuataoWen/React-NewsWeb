@@ -14,7 +14,7 @@ class SourceSwitchComponent extends React.Component {
 
   componentDidMount() {
     let tmp = localStorage.getItem("newsSource");
-    
+
     if (tmp != null) {
       if (tmp === "true") tmp = GUARDIAN_SRC;
       else tmp = NYT_SRC;
@@ -22,7 +22,7 @@ class SourceSwitchComponent extends React.Component {
     else {
       tmp = GUARDIAN_SRC;
     }
-    
+
     this.setState({ newsSource: tmp });
     this.props.setNewsSource(tmp);
   }
@@ -51,8 +51,8 @@ class SourceSwitchComponent extends React.Component {
               height={22}
               offColor="#cbcacb"
               onColor="#0386ed" />
-                      &nbsp;&nbsp;
-                    </label>
+            &nbsp;&nbsp;
+          </label>
         </div>
         <div><h2 className="switchTag">Guardian</h2></div>
       </>
