@@ -112,7 +112,12 @@ class BigCard extends Component {
             <div className="mr-auto p-2"><span><i>{date}</i></span></div>
             <div className="p-2">
               <a href="/#" data-tip data-for='facebookTooltip'>
-                <FacebookShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
+                <FacebookShareButton
+                  style={{ outline: 'none' }}
+                  url={url}
+                  hashtag='#CSCI_571NewsApp'
+                  className="button"
+                >
                   <FacebookIcon size={25} round={true} />
                 </FacebookShareButton>
               </a>
@@ -121,7 +126,12 @@ class BigCard extends Component {
               </ReactTooltip>
 
               <a href="/#" data-tip data-for='twitterTooltip'>
-                <TwitterShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
+                <TwitterShareButton
+                  style={{ outline: 'none' }}
+                  url={url}
+                  via='#CSCI_571NewsApp'
+                  className="button"
+                >
                   <TwitterIcon size={25} round={true} />
                 </TwitterShareButton>
               </a>
@@ -130,7 +140,12 @@ class BigCard extends Component {
               </ReactTooltip>
 
               <a href="/#" data-tip data-for='emailTooltip'>
-                <EmailShareButton style={{ outline: 'none' }} url={url} quote={title} className="button">
+                <EmailShareButton
+                  style={{ outline: 'none' }}
+                  url={url}
+                  subject='#CSCI_571NewsApp'
+                  className="button"
+                >
                   <EmailIcon size={25} round={true} />
                 </EmailShareButton>
               </a>
