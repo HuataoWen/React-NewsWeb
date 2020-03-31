@@ -28,6 +28,7 @@ class SearchBoxComponent extends Component {
     }
     else {
       if (keyword !== '') {
+        localOptions.push({ value: keyword, label: keyword });
         fetch('https://xiaobudai.cognitiveservices.azure.com/bing/v7.0/suggestions?mkt=en-US&q=' + keyword, {
           headers: {
             "Ocp-Apim-Subscription-Key": "8cfdb72a5dfe44ba94f7d66f8a598f0a"
@@ -43,6 +44,7 @@ class SearchBoxComponent extends Component {
               for (i = 0; i < results.length; i++) {
                 localOptions.push({ value: results[i], label: results[i] });
               }
+              console.log(localOptions);
               this.setState({ loadingSuggestions: false });
               this.setState({ searchSuggestions: localOptions });
             }

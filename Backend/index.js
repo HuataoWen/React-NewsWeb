@@ -9,7 +9,7 @@ var NY_API_KEY = 'LPqcV435gYSnG5AmlyU9DdHHC34tozKE';
 //https://api.nytimes.com/svc/search/v2/articlesearch.json?fq=web_url:(%22https://www.nytimes.com/2020/01/24/realestate/dealing-with-clutter-hangover.html%22)&api-key=LPqcV435gYSnG5AmlyU9DdHHC34tozKE
 var GUAD_API_KEY = '50290f90-1c40-44ff-a2c7-8a04aa499afa';
 //https://content.guardianapis.com/world/2020/mar/18/wednesday-briefing-coronavirus-the-race-home?api-key=50290f90-1c40-44ff-a2c7-8a04aa499afa&show-blocks=all
-var pageGroup = { 'home': 1, 'world': 1, 'politics': 1, 'business': 1, 'technology': 1, 'sports': 1 };
+var pageGroup = { 'world': 1, 'politics': 1, 'business': 1, 'technology': 1, 'sports': 1 };
 let NYT_SRC = 'false', GUARDIAN_SRC = 'true';
 
 // https://api.nytimes.com/svc/topstories/v2/home.json?api-key=LPqcV435gYSnG5AmlyU9DdHHC34tozKE
@@ -33,6 +33,8 @@ app.get('/page/:page-:source', function (req, res) {
           if (req.params.page == 'home') {
             if (pageGroup[body.results[i].section.toLowerCase()] == 1) section = [body.results[i].section.toLowerCase()];
             else if (pageGroup[body.results[i].subsection.toLowerCase()] == 1) section = [body.results[i].subsection.toLowerCase()];
+            else if (body.results[i].section != undefined) section = [body.results[i].section.toLowerCase()];
+            else if (body.results[i].subsection!= undefined) section = [body.results[i].subsection.toLowerCase()];
             else section = ['health'];
           }
           else if (body.results[i].section.toLowerCase() == req.params.page) {
@@ -90,7 +92,9 @@ app.get('/page/:page-:source', function (req, res) {
 
           if (requestPage == 'home') {
             if (pageGroup[section] == 1) section = [section];
+            else if (section != undefined) section = [section];
             else section = ['health'];
+            if (section == 'sport') section = ['sports'];
           }
           else if (section == requestPage) {
             section = [section];
@@ -144,8 +148,9 @@ app.get('/getArticle', function (req, res) {
         body = JSON.parse(body);
         console.log(body);
 
-        if (pageGroup[body.response.docs[0].news_desk.toLowerCase()] == 1) section = [body.response.docs[0].news_desk.toLowerCase()];
-        else section = ['health'];
+        //if (pageGroup[body.response.docs[0].news_desk.toLowerCase()] == 1) section = [body.response.docs[0].news_desk.toLowerCase()];
+        //else section = ['health'];
+        section = [body.response.docs[0].news_desk.toLowerCase()];
 
         if (body.response.docs[0].multimedia == null || body.response.docs[0].multimedia.length == 0) {
           url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
@@ -178,8 +183,10 @@ app.get('/getArticle', function (req, res) {
 
         section = body.response.content.sectionId.toLowerCase();
         if (section == 'sport') section = 'sports';
-        if (pageGroup[section] == 1) section = [section];
-        else section = ['health'];
+        
+        //if (pageGroup[section] == 1) section = [section];
+        //else section = ['health'];
+        section = [section];
 
         if (body.response.content.blocks.main == undefined || body.response.content.blocks.main.elements[0].assets.length == 0) {
           url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';
@@ -213,8 +220,9 @@ var getAPIresponse = function (requestedUrl, cb) {
       body = JSON.parse(body);
       var i = 0;
       while (i < body.response.docs.length) {
-        if (pageGroup[body.response.docs[i].news_desk.toLowerCase()] == 1) section = [body.response.docs[i].news_desk.toLowerCase()];
-        else section = ['health'];
+        //if (pageGroup[body.response.docs[i].news_desk.toLowerCase()] == 1) section = [body.response.docs[i].news_desk.toLowerCase()];
+        //else section = ['health'];
+        section = [body.response.docs[i].news_desk.toLowerCase()];
 
         if (body.response.docs[i].multimedia == null || body.response.docs[i].multimedia.length == 0) {
           url_img = 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Nytimes_hq.jpg';
@@ -243,7 +251,6 @@ var getAPIresponse = function (requestedUrl, cb) {
   });
 }
 
-
 // http://127.0.0.1:4000/search/tesla-ss
 app.get('/search/:keyword-:source', function (req, res) {
   let requestedUrl, requestPage;
@@ -267,8 +274,9 @@ app.get('/search/:keyword-:source', function (req, res) {
             section = body.response.results[i].sectionId.toLowerCase();
             if (section == 'sport') section = 'sports';
 
-            if (pageGroup[section] == 1) section = [section];
-            else section = ['health'];
+            //if (pageGroup[section] == 1) section = [section];
+            //else section = ['health'];
+            section = [section];
 
             if (body.response.results[i].blocks.main == undefined || body.response.results[i].blocks.main.elements[0].assets.length == 0) {
               url_img = 'https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png';

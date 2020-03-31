@@ -5,6 +5,8 @@ import { MdDelete } from 'react-icons/md';
 
 import './SmallNewsCard.css';
 
+var pageGroup = { 'world': 1, 'politics': 1, 'business': 1, 'technology': 1, 'sports': 1 };
+
 class SmallCard extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +31,9 @@ class SmallCard extends Component {
     let sourceTag;
     if (source === 'true') sourceTag = 'guardian';
     else sourceTag = 'nytimes';
+    let tagsStyle;
+    if (pageGroup[tags[0]] !== 1) tagsStyle = ['health'];
+    else tagsStyle = tags;
 
     return (
       <Col lg="3">
@@ -47,11 +52,7 @@ class SmallCard extends Component {
             <div>
               <span><i>{date}</i></span>
               {this.props.page === 'bookmark' && <span key={sourceTag} className={sourceTag + 'Tag'}>{sourceTag.toUpperCase()}</span>}
-              {tags.map((value, index) => {
-                return (
-                  <span key={value} className={value + "Tag"}>{value.toUpperCase()}</span>
-                )
-              })}
+              <span className={tagsStyle[0] + "Tag"}>{tags[0].toUpperCase()}</span>
             </div>
           </div>
         </Card>
