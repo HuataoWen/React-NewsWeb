@@ -13,36 +13,14 @@ class SearchBoxComponent extends Component {
 
     this.getSearchSuggestions = this.getSearchSuggestions.bind(this);
     this.getSearchNews = this.getSearchNews.bind(this);
-    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
-
-  handleSearchChange = async (event, { value }) => {
-    try {
-      const response = await fetch(
-        `https://xiaobudai.cognitiveservices.azure.com/bing/v7.0/suggestions?mkt=en-US&q=${value}`,
-        {
-          headers: {
-            "Ocp-Apim-Subscription-Key": "8cfdb72a5dfe44ba94f7d66f8a598f0a"
-          }
-        }
-      );
-      const data = await response.json();
-      const resultsRaw = data.suggestionGroups[0].searchSuggestions;
-      const results = resultsRaw.map(result => ({ title: result.displayText, url: result.url }));
-
-      //this.setState({ results });
-      console.log(results);
-    } catch (error) {
-      console.error(`Error fetching search ${value}`);
-    }
-  };
 
   getSearchSuggestions(keyword) {
     console.log('getSearchSuggestions() -> keyword:' + keyword);
     this.setState({ loadingSuggestions: true });
     let localOptions = [];
 
-    let debug = true;
+    let debug = false;
 
     if (debug) {
       this.setState({ searchSuggestions: [{ value: keyword, label: keyword }] });

@@ -61,7 +61,7 @@ class App extends React.Component {
             <Route exact path="/article" render={(props) => <PageOpenArticleRouter {...props} source={this.state.newsSource} />} />
             <Route exact path="/favorites" render={(props) => <PageFavorites {...props} source={this.state.newsSource} />} />
             <Route exact path="/(home|world|politics|business|technology|sports)/" render={(props) => <PageswithRouter {...props} source={this.state.newsSource} />} />
-            <Route component={() => <h3>404 - Not found</h3>} />
+            <Route component={() => <div style={{ textAlign: 'center' }}><br/><h3>404 - Not found</h3></div>} />
           </RouterSwitch>
         </Router>
         <ToastContainer
