@@ -37,6 +37,7 @@ class PageFavorites extends Component {
     bookmarkDB = bookmarkDB.filter(function (item) { return item.id !== id; });
     localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
     console.log("bookmarkDB:" + bookmarkDB);
+    
     toast('Removing ' + title, { containerId: 'A' });
     this.updateContent();
 
@@ -92,32 +93,32 @@ class PageFavorites extends Component {
         {this.state.newsCard}
         <div>
           <Modal open={this.state.modalFlag} onClose={this.onCloseModal}>
-            <h4>{this.state.modalTitle}&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+            <h5>{this.state.modalTitle}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
             <hr />
-            <h4 className="d-flex justify-content-center">Share via</h4>
+            <h5 className="d-flex justify-content-center">Share via</h5>
             <div className="d-flex justify-content-around">
               <FacebookShareButton style={{ outline: 'none' }}
                 url={this.state.modalURL}
-                quote={this.state.modalTitle}
+                hashtag='#CSCI_571NewsApp'
                 className="button"
               >
-                <FacebookIcon size={50} round={true} />
+                <FacebookIcon size={40} round={true} />
               </FacebookShareButton>
 
               <TwitterShareButton style={{ outline: 'none' }}
                 url={this.state.modalURL}
-                quote={this.state.modalTitle}
+                via='#CSCI_571NewsApp'
                 className="button"
               >
-                <TwitterIcon size={50} round={true} />
+                <TwitterIcon size={40} round={true} />
               </TwitterShareButton>
 
               <EmailShareButton style={{ outline: 'none' }}
                 url={this.state.modalURL}
-                quote={this.state.modalTitle}
+                subject='#CSCI_571NewsApp'
                 className="button"
               >
-                <EmailIcon size={50} round={true} />
+                <EmailIcon size={40} round={true} />
               </EmailShareButton>
             </div>
           </Modal>

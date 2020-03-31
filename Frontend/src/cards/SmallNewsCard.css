@@ -21,3 +21,8 @@
     position: relative;
 
 }
+
+.Toastify__toast--default {
+    background: #fff;
+    color: black;
+}

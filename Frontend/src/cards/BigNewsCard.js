@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { createRef, Component } from 'react';
 import { Card } from 'react-bootstrap';
 import { MdBookmark, MdBookmarkBorder, MdExpandMore, MdExpandLess } from 'react-icons/md';
 import { FacebookIcon, TwitterIcon, EmailIcon, FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import './BigNewsCard.css';
 
+
 class BigCard extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +17,8 @@ class BigCard extends Component {
       expandIcon: MdExpandMore,
       inBookmark: false,
       ppos: 0,
-      numLines: '9em'
+      numLines: '9em',
+      isExpand: false
     };
 
     this.myRef = React.createRef();
@@ -37,17 +39,12 @@ class BigCard extends Component {
     }
     else {
       window.scrollTo({ top: this.state.ppos - 92, left: 0, behavior: 'smooth' });
-      setTimeout(
-        function () {
-          this.setState({ numLines: '9em' });
-        }
-          .bind(this),
-        500
-      );
+      setTimeout(function () { this.setState({ numLines: '9em' }); }.bind(this), 500);
       this.setState({ expandIcon: MdExpandMore });
     }
   }
 
+  wrapper = createRef();
   componentDidMount() {
     let id = this.props.news.id;
     this.removeCommentBox = commentBox('5708029035020288-proj', { defaultBoxId: id });
@@ -61,6 +58,12 @@ class BigCard extends Component {
       if (tmp.length === 0) this.setState({ inBookmark: false });
       else this.setState({ inBookmark: true });
     }
+
+    const node = this.wrapper.current;
+    var divHeight = node.offsetHeight / 24;
+    if (divHeight < 6) this.setState({ isExpand: false });
+    else this.setState({ isExpand: true });
+    console.log('divHeight' + divHeight);
   }
 
   componentWillUnmount() {
@@ -139,10 +142,10 @@ class BigCard extends Component {
             <div className="p-2"></div>
 
             <div className="p-2">
-              <a data-tip data-for='bookmarkTooltip2'>
+              <button data-tip data-for='bookmarkTooltip2'>
                 {this.state.inBookmark === true && <MdBookmark size={25} color='#ff0000' onClick={() => this.removeFromBookmark(bookmarkInfo)} />}
                 {this.state.inBookmark === false && <MdBookmarkBorder size={25} color='#ff0000' onClick={() => this.saveToBookmark(bookmarkInfo)} />}
-              </a>
+              </button>
               <ReactTooltip id='bookmarkTooltip2' type='dark' place="top" effect="solid">
                 <span>Bookmark</span>
               </ReactTooltip>
@@ -154,17 +157,17 @@ class BigCard extends Component {
           </div>
 
           <div>
-            <Card.Text className="bigCardDes" style={{ maxHeight: this.state.numLines }}>{description}</Card.Text>
+            <Card.Text ref={this.wrapper} className="bigCardDes" style={{ maxHeight: this.state.numLines }}>{description}</Card.Text>
           </div>
 
-          {description.length >= 200 &&
+          {this.state.isExpand === true &&
             <div className="d-flex justify-content-end" onClick={() => this.expandCollapse()} ref={this.myRef}>
               {<this.state.expandIcon size={25} />}
             </div>}
 
           <div className="commentbox" id={this.props.news.id}></div>
         </Card>
-        
+
       </div>
     )
   }
