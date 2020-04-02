@@ -14,18 +14,18 @@ class MedianNewsCard extends Component {
     else tagsStyle = tags;
 
     return (
-      <div>
+      <div onClick={() => this.props.openCard(id)}>
         <Card className="medianCard">
           <Row>
-            <Col md="2" onClick={() => this.props.openCard(id)}>
+            <Col md="2">
               <Card.Img top='true'
                 src={urlToImg}
                 alt="Card image cap"
               />
             </Col>
             <Col>
-              <strong><i>{title}</i><MdShare onClick={() => this.props.onOpenModal(title, url)} /></strong>
-              <div onClick={() => this.props.openCard(id)}>
+              <strong><i>{title}</i><MdShare onClick={(e) => this.props.onOpenModal(e, title, url)} /></strong>
+              <div>
                 <Card.Text className="medianCardDes">{description}</Card.Text>
                 <span><i>{date}</i></span>
                 <span className={tagsStyle[0] + "Tag"}>{tags[0].toUpperCase()}</span>
@@ -33,7 +33,6 @@ class MedianNewsCard extends Component {
             </Col>
           </Row>
         </Card>
-        
       </div>
     )
   }

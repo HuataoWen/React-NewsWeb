@@ -30,12 +30,13 @@ class PageFavorites extends Component {
     this.onCloseModal = this.onCloseModal.bind(this);
   }
 
-  removeFromBookmark(id, title) {
+  removeFromBookmark(e, id, title) {
+    e.stopPropagation();
     console.log(id);
 
-    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    let bookmarkDB = JSON.parse(localStorage.getItem("xiaobudaiBookmarkDB"));
     bookmarkDB = bookmarkDB.filter(function (item) { return item.id !== id; });
-    localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
+    localStorage.setItem("xiaobudaiBookmarkDB", JSON.stringify(bookmarkDB));
     console.log("bookmarkDB:" + bookmarkDB);
     
     toast('Removing ' + title, { containerId: 'A' });
@@ -47,7 +48,7 @@ class PageFavorites extends Component {
     ReactTooltip.hide();
     console.log('Favorites');
 
-    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    let bookmarkDB = JSON.parse(localStorage.getItem("xiaobudaiBookmarkDB"));
 
     if (bookmarkDB === null || bookmarkDB.length === 0) {
       this.setState({ newsCard: <div style={{ textAlign: 'center' }}><br/><h4>You have no saved articles</h4></div> })
@@ -77,7 +78,8 @@ class PageFavorites extends Component {
     this.updateContent();
   }
 
-  onOpenModal(title, url) {
+  onOpenModal(e, title, url) {
+    e.stopPropagation();
     this.setState({ modalFlag: true });
     this.setState({ modalTitle: title });
     this.setState({ modalURL: url });

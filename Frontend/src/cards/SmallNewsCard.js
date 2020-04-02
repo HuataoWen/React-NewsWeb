@@ -10,9 +10,6 @@ var pageGroup = { 'world': 1, 'politics': 1, 'business': 1, 'technology': 1, 'sp
 class SmallCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tmp: ''
-    };
     this.openCard = this.openCard.bind(this);
   }
 
@@ -37,14 +34,14 @@ class SmallCard extends Component {
 
     return (
       <Col lg="3">
-        <Card className="smallCard">
+        <Card className="smallCard" onClick={() => this.openCard(id, source)}>
           <strong>
             <i>{title}</i>
-            <MdShare onClick={() => this.props.onOpenModal(title, url)} />
-            {this.props.page === 'bookmark' && <MdDelete onClick={() => this.props.removeFromBookmark(id, title)}></MdDelete>}
+            <MdShare onClick={(e) => this.props.onOpenModal(e, title, url)} />
+            {this.props.page === 'bookmark' && <MdDelete onClick={(e) => this.props.removeFromBookmark(e, id, title)}></MdDelete>}
           </strong>
 
-          <div onClick={() => this.openCard(id, source)}>
+          <div>
             <Card.Img top='true'
               src={urlToImg}
               alt="Card image cap"

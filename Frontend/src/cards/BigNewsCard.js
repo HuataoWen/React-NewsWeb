@@ -49,7 +49,7 @@ class BigCard extends Component {
     let id = this.props.news.id;
     this.removeCommentBox = commentBox('5708029035020288-proj', { defaultBoxId: id });
 
-    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    let bookmarkDB = JSON.parse(localStorage.getItem("xiaobudaiBookmarkDB"));
     if (bookmarkDB == null) {
       this.setState({ inBookmark: false });
     }
@@ -73,12 +73,12 @@ class BigCard extends Component {
   saveToBookmark(bookmarkInfo) {
     console.log(bookmarkInfo);
 
-    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    let bookmarkDB = JSON.parse(localStorage.getItem("xiaobudaiBookmarkDB"));
 
     if (bookmarkDB != null) bookmarkDB = [...bookmarkDB, bookmarkInfo];
     else bookmarkDB = [bookmarkInfo];
     console.log('here:' + JSON.stringify(bookmarkDB));
-    localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
+    localStorage.setItem("xiaobudaiBookmarkDB", JSON.stringify(bookmarkDB));
 
     console.log("bookmarkDB:" + bookmarkDB);
 
@@ -89,9 +89,9 @@ class BigCard extends Component {
   removeFromBookmark(bookmarkInfo) {
     console.log(bookmarkInfo);
 
-    let bookmarkDB = JSON.parse(localStorage.getItem("bookmarkDB"));
+    let bookmarkDB = JSON.parse(localStorage.getItem("xiaobudaiBookmarkDB"));
     bookmarkDB = bookmarkDB.filter(function (item) { return item.id !== bookmarkInfo.id; });
-    localStorage.setItem("bookmarkDB", JSON.stringify(bookmarkDB));
+    localStorage.setItem("xiaobudaiBookmarkDB", JSON.stringify(bookmarkDB));
 
     console.log("bookmarkDB:" + bookmarkDB);
 

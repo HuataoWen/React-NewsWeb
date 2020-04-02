@@ -40,8 +40,7 @@ class SearchBoxComponent extends Component {
             if (result.error === undefined) {
               let resultsRaw = result.suggestionGroups[0].searchSuggestions;
               let results = resultsRaw.map(result => (result.displayText));
-              let i;
-              for (i = 0; i < results.length; i++) {
+              for (var i = 0; i < results.length; i++) {
                 localOptions.push({ value: results[i], label: results[i] });
               }
               console.log(localOptions);
@@ -70,7 +69,7 @@ class SearchBoxComponent extends Component {
   render() {
     if (this.props.location.pathname.substring(0, 7) !== '/search') {
       return (
-        <div style={{ width: '250px', marginRight: '10px' }}>
+        <div style={{ width: '250px', marginRight: '10px'}}>
           <Select
             to="/search"
             isLoading={this.state.loadingSuggestions}

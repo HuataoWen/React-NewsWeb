@@ -19,13 +19,13 @@ const SearchBoxComponentRouter = withRouter(SearchBoxComponent);
 const PageswithRouter = withRouter(Pages);
 const PageOpenArticleRouter = withRouter(PageOpenArticle);
 
-let NYT_SRC = false;
+let NYT_SRC = false, GUARDIAN_SRC = true;
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newsSource: NYT_SRC
+      newsSource: getNewsSourceFromLocalStorage()
     };
   };
 
@@ -38,6 +38,7 @@ class App extends React.Component {
             <SearchBoxComponentRouter />
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            
             <Navbar.Collapse id="basic-navbar-nav">
 
               <Nav className="mr-auto">
@@ -61,9 +62,10 @@ class App extends React.Component {
             <Route exact path="/article" render={(props) => <PageOpenArticleRouter {...props} source={this.state.newsSource} />} />
             <Route exact path="/favorites" render={(props) => <PageFavorites {...props} source={this.state.newsSource} />} />
             <Route exact path="/(home|world|politics|business|technology|sports)/" render={(props) => <PageswithRouter {...props} source={this.state.newsSource} />} />
-            <Route component={() => <div style={{ textAlign: 'center' }}><br/><h3>404 - Not found</h3></div>} />
+            <Route component={() => <div style={{ textAlign: 'center' }}><br /><h3>404 - Not found</h3></div>} />
           </RouterSwitch>
         </Router>
+
         <ToastContainer
           position="top-center"
           autoClose={2000}
@@ -82,3 +84,17 @@ class App extends React.Component {
 }
 
 export default App;
+
+function getNewsSourceFromLocalStorage() {
+  let tmp = localStorage.getItem("xiaobudaiNewsSource");
+
+  if (tmp != null) {
+    if (tmp === "true") tmp = GUARDIAN_SRC;
+    else tmp = NYT_SRC;
+  }
+  else {
+    tmp = GUARDIAN_SRC;
+  }
+
+  return tmp;
+}

@@ -28,6 +28,7 @@ class Pages extends Component {
   updateContent() {
     this.setState({ loading: true });
     this.setState({ newsCard: '' });
+    console.log(this.props.source);
 
     let AWSIP = false;
     let requestedUrl;
@@ -39,7 +40,7 @@ class Pages extends Component {
       .then(response => response.json())
       .then(result => {
         this.setState({ loading: false });
-
+        console.log(result);
         this.setState({
           newsCard: result.map(news => {
             return (
@@ -66,7 +67,8 @@ class Pages extends Component {
     }
   }
 
-  onOpenModal(title, url) {
+  onOpenModal(e, title, url) {
+    e.stopPropagation();
     this.setState({ modalFlag: true });
     this.setState({ modalTitle: title });
     this.setState({ modalURL: url });
