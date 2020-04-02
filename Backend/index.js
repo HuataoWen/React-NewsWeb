@@ -308,34 +308,7 @@ app.get('/search/:keyword-:source', function (req, res) {
 })
 
 app.get('/', function (req, res) {
-  var data = [
-    {
-      id: 1,
-      title: "sss Davidson",
-      date: "2020-03-27",
-      urlToImg: "https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png",
-      url: "www.google.com",
-      tags: ['world', 'health'],
-      description: "Met at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with laterMet at a party. Will connect with later"
-    },
-    {
-      id: 2,
-      title: "Mark Markson",
-      date: "2020-03-27",
-      urlToImg: "https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png",
-      url: "www.google.com",
-      tags: ['world', 'health'],
-      description: "Met at a party. Will connect with later"
-    },
-    {
-      id: 3,
-      title: "Judy Judyson",
-      date: "2020-03-27",
-      urlToImg: "https://assets.guim.co.uk/images/eada8aa27c12fe2d5afa3a89d3fbae0d/fallback-logo.png",
-      url: "www.google.com",
-      tags: ['world', 'health'],
-      description: "Met at a party. Will connect with later"
-    }];
+  var data = '<h1>Hello, welcome to my news website!</h1>';
   res.json(data);
 })
 
